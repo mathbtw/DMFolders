@@ -1,0 +1,95 @@
+diff --git a/src/equicordplugins/channelTabs/components/BookmarkContainer.tsx b/src/equicordplugins/channelTabs/components/BookmarkContainer.tsx
+index d0ee359..b32478b 100644
+--- a/src/equicordplugins/channelTabs/components/BookmarkContainer.tsx
++++ b/src/equicordplugins/channelTabs/components/BookmarkContainer.tsx
+@@ -5,6 +5,7 @@
+  */
+ 
+ import { BaseText } from "@components/BaseText";
++import { FolderIcon as DmFoldersIcon } from "@components/Icons";
+ import { BasicChannelTabsProps, Bookmark, BookmarkFolder, BookmarkProps, getDiscordFolderIcon, isBookmarkFolder, isTabSelected, navigateToBookmark, openedTabs, settings, UseBookmarkMethods, useBookmarks } from "@equicordplugins/channelTabs/util";
+ import { CircleQuestionIcon, DiscoveryIcon, EnvelopeIcon, FriendsIcon, NitroIcon, QuestIcon, ShopIcon } from "@equicordplugins/channelTabs/util/icons";
+ import { classNameFactory } from "@utils/css";
+@@ -71,6 +72,7 @@ function BookmarkIcon({ bookmark }: { bookmark: Bookmark | BookmarkFolder; }) {
+     if (channelId?.startsWith("__")) {
+         const specialIconsMap: Record<string, React.ComponentType<any>> = {
+             "__quests__": QuestIcon,
++            "__folders__": DmFoldersIcon,
+             "__message-requests__": EnvelopeIcon,
+             "__friends__": FriendsIcon,
+             "__shop__": ShopIcon,
+diff --git a/src/equicordplugins/channelTabs/components/ChannelTab.tsx b/src/equicordplugins/channelTabs/components/ChannelTab.tsx
+index 198790c..443622e 100644
+--- a/src/equicordplugins/channelTabs/components/ChannelTab.tsx
++++ b/src/equicordplugins/channelTabs/components/ChannelTab.tsx
+@@ -5,6 +5,7 @@
+  */
+ 
+ import { BaseText } from "@components/BaseText";
++import { FolderIcon } from "@components/Icons";
+ import { ChannelTabsProps, closeTab, ensureUnreadFallbackCountsLoaded, getNotificationDotState, getUnreadFallbackCounts, isTabSelected, moveDraggedTabs, moveToTab, openedTabs, settings, updateUnreadFallbackCounts } from "@equicordplugins/channelTabs/util";
+ import { ActivityIcon, CircleQuestionIcon, DiscoveryIcon, EnvelopeIcon, FriendsIcon, ICYMIIcon, NitroIcon, QuestIcon, ShopIcon } from "@equicordplugins/channelTabs/util/icons";
+ import { getActiveAutoCompletes } from "@equicordplugins/questify/utils/completion";
+@@ -166,6 +167,8 @@ export const TabNumberBadge = ({ number, position, isSelected, isCompact, isHove
+     );
+ };
+ 
++const FoldersTabIcon = () => <FolderIcon width={20} height={20} />;
++
+ function ChannelTabContent(props: ChannelTabsProps & {
+     guild?: Guild,
+     channel?: Channel;
+@@ -267,6 +270,7 @@ function ChannelTabContent(props: ChannelTabsProps & {
+     if (channelId && channelId.startsWith("__")) {
+         const specialPagesConfig: Record<string, { label: string, Icon: React.ComponentType<any>; }> = {
+             "__quests__": { label: "Quests", Icon: QuestIcon },
++            "__folders__": { label: "Folders", Icon: FoldersTabIcon },
+             "__message-requests__": { label: "Message Requests", Icon: EnvelopeIcon },
+             "__friends__": { label: getIntlMessage("FRIENDS"), Icon: FriendsIcon },
+             "__shop__": { label: "Shop", Icon: ShopIcon },
+diff --git a/src/equicordplugins/channelTabs/index.tsx b/src/equicordplugins/channelTabs/index.tsx
+index 511e238..e93dd64 100644
+--- a/src/equicordplugins/channelTabs/index.tsx
++++ b/src/equicordplugins/channelTabs/index.tsx
+@@ -163,6 +163,9 @@ export default definePlugin({
+                 if (path === "/quest-home" || path.includes("quest-home")) {
+                     channelId = "__quests__";
+                     guildId = "@me";
++                } else if (path === "/channels/@me/folders") {
++                    channelId = "__folders__";
++                    guildId = "@me";
+                 } else if (path.includes("/message-requests")) {
+                     channelId = "__message-requests__";
+                     guildId = "@me";
+diff --git a/src/equicordplugins/channelTabs/util/bookmarks.ts b/src/equicordplugins/channelTabs/util/bookmarks.ts
+index f69ce3f..5eec315 100644
+--- a/src/equicordplugins/channelTabs/util/bookmarks.ts
++++ b/src/equicordplugins/channelTabs/util/bookmarks.ts
+@@ -24,6 +24,7 @@ export function bookmarkPlaceholderName(bookmark: Omit<Bookmark | BookmarkFolder
+     if (channelId?.startsWith("__")) {
+         const specialPagesMap: Record<string, string> = {
+             "__quests__": "Quests",
++            "__folders__": "Folders",
+             "__message-requests__": "Message Requests",
+             "__friends__": "Friends",
+             "__shop__": "Shop",
+diff --git a/src/equicordplugins/channelTabs/util/tabs.tsx b/src/equicordplugins/channelTabs/util/tabs.tsx
+index ea77c7d..9a85cb9 100644
+--- a/src/equicordplugins/channelTabs/util/tabs.tsx
++++ b/src/equicordplugins/channelTabs/util/tabs.tsx
+@@ -351,6 +351,7 @@ export function moveToTab(id: number) {
+     if (tab.channelId && tab.channelId.startsWith("__")) {
+         const routeMap: Record<string, string> = {
+             "__quests__": "/quest-home",
++            "__folders__": "/channels/@me/folders",
+             "__message-requests__": "/message-requests",
+             "__friends__": "/channels/@me",
+             "__shop__": "/shop",
+@@ -522,6 +523,7 @@ export function navigateToBookmark(ch: BasicChannelTabsProps) {
+         if (ch.channelId && ch.channelId.startsWith("__")) {
+             const routeMap: Record<string, string> = {
+                 "__quests__": "/quest-home",
++                "__folders__": "/channels/@me/folders",
+                 "__message-requests__": "/message-requests",
+                 "__friends__": "/channels/@me",
+                 "__shop__": "/shop",

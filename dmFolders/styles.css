@@ -1,0 +1,171 @@
+.vc-dmfolders-page {
+    flex: 1;
+    min-width: 0;
+    padding: 24px 32px;
+    overflow-y: auto;
+    color: var(--text-default);
+}
+
+.vc-dmfolders-header,
+.vc-dmfolders-folder-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vc-dmfolders-header {
+    margin-bottom: 24px;
+}
+
+.vc-dmfolders-title,
+.vc-dmfolders-folder-name {
+    flex: 1;
+}
+
+.vc-dmfolders-folder {
+    margin-bottom: 24px;
+}
+
+.vc-dmfolders-folder-header {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 2px solid var(--background-modifier-accent);
+    cursor: pointer;
+}
+
+.vc-dmfolders-chevron {
+    flex-shrink: 0;
+    color: var(--interactive-icon-default);
+    transform: rotate(90deg);
+    transition: transform 0.2s ease;
+}
+
+.vc-dmfolders-chevron.vc-dmfolders-collapsed {
+    transform: rotate(0deg);
+}
+
+.vc-dmfolders-content {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.25s ease, opacity 0.2s ease;
+}
+
+.vc-dmfolders-content.vc-dmfolders-collapsed {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.vc-dmfolders-content-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.vc-dmfolders-emoji {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    object-fit: contain;
+}
+
+.vc-dmfolders-modal {
+    display: grid;
+    gap: 1.5em;
+}
+
+.vc-dmfolders-icon-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.vc-dmfolders-emoji-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--background-modifier-hover);
+}
+
+.vc-dmfolders-emoji-trigger .vc-dmfolders-emoji {
+    width: 28px;
+    height: 28px;
+    font-size: 28px;
+    line-height: 28px;
+}
+
+.vc-dmfolders-color,
+.vc-dmfolders-color > * {
+    overflow: hidden;
+}
+
+.vc-dmfolders-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.vc-dmfolders-row:hover {
+    background: var(--background-modifier-hover);
+}
+
+.vc-dmfolders-row-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.vc-dmfolders-row-name,
+.vc-dmfolders-row-preview {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vc-dmfolders-row-preview,
+.vc-dmfolders-row-date {
+    color: var(--text-muted);
+}
+
+.vc-dmfolders-row-date {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 64px;
+    text-align: right;
+}
+
+.vc-dmfolders-row-remove {
+    opacity: 0;
+}
+
+.vc-dmfolders-row:hover .vc-dmfolders-row-remove {
+    opacity: 1;
+}
+
+.vc-dmfolders-badge {
+    margin-inline-start: auto;
+    padding: 0 6px;
+    min-width: 16px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    background: var(--status-danger);
+    color: var(--white);
+}
+
+.vc-dmfolders-unread {
+    background: var(--background-mod-strong);
+    color: var(--text-default);
+}
