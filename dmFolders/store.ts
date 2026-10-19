@@ -6,6 +6,7 @@
 
 import { definePluginSettings } from "@api/Settings";
 import { OptionType } from "@utils/types";
+import { lodash } from "@webpack/common";
 
 export interface FolderEmoji {
     name: string;
@@ -43,6 +44,10 @@ export const settings = definePluginSettings({
 
 export const getFolders = () => settings.store.folders ?? [];
 
+const setFolders = (folders: Folder[]) => {
+    settings.store.folders = lodash.cloneDeep(folders);
+};
+
 export const setCollapsed = (id: string, value: boolean) => {
     settings.store.collapsed = { ...settings.store.collapsed, [id]: value };
 };
@@ -50,26 +55,26 @@ export const setCollapsed = (id: string, value: boolean) => {
 export const isInFolder = (channelId: string) => getFolders().some(f => f.channels.includes(channelId));
 
 export function createFolder(data: Pick<Folder, "name" | "icon" | "color">, channelId?: string) {
-    settings.store.folders = [...getFolders(), { ...data, id: crypto.randomUUID(), channels: channelId ? [channelId] : [] }];
+    setFolders([...getFolders(), { ...data, id: crypto.randomUUID(), channels: channelId ? [channelId] : [] }]);
 }
 
 export function updateFolder(id: string, changes: Partial<Omit<Folder, "id">>) {
-    settings.store.folders = getFolders().map(f => f.id === id ? { ...f, ...changes } : f);
+    setFolders(getFolders().map(f => f.id === id ? { ...f, ...changes } : f));
 }
 
 export function deleteFolder(id: string) {
-    settings.store.folders = getFolders().filter(f => f.id !== id);
+    setFolders(getFolders().filter(f => f.id !== id));
 }
 
 export function removeFromFolder(id: string, channelId: string) {
-    settings.store.folders = getFolders().map(f => f.id === id ? { ...f, channels: f.channels.filter(c => c !== channelId) } : f);
+    setFolders(getFolders().map(f => f.id === id ? { ...f, channels: f.channels.filter(c => c !== channelId) } : f));
 }
 
 export function toggleChannel(id: string, channelId: string) {
     const add = !getFolders().find(f => f.id === id)?.channels.includes(channelId);
 
-    settings.store.folders = getFolders().map(f => {
+    setFolders(getFolders().map(f => {
         const channels = f.channels.filter(c => c !== channelId);
         return f.id === id && add ? { ...f, channels: [...channels, channelId] } : { ...f, channels };
-    });
+    }));
 }
