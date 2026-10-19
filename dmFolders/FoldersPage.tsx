@@ -40,10 +40,12 @@ const requireSettingsModal = extractAndLoadChunksLazy(['type:"USER_SETTINGS_MODA
 const GroupDmsRecipientsIcon = findComponentByCodeLazy('["aria-hidden"],"aria-label":');
 const SelectedChannelActionCreators = findByPropsLazy("selectPrivateChannel");
 
+const isSnowflake = (value: string) => /^\d+$/.test(value);
+
 const toHex = (color?: number) => color == null ? undefined : `#${color.toString(16).padStart(6, "0")}`;
 
 function Emoji({ emoji }: { emoji: FolderEmoji; }) {
-    return emoji.id
+    return emoji.id && isSnowflake(emoji.id)
         ? <img className={cl("emoji")} src={IconUtils.getEmojiURL({ id: emoji.id, animated: !!emoji.animated, size: 48 })} alt={emoji.name} />
         : <span className={cl("emoji")}>{emoji.name}</span>;
 }
@@ -196,7 +198,7 @@ function ChannelRow({ id, folderId, visible }: { id: string; folderId: string; v
     const [last, setLast] = useState<LastMessage | null>(null);
 
     useEffect(() => {
-        if (!visible || !lastMessageId || last?.id === lastMessageId) return;
+        if (!visible || !lastMessageId || last?.id === lastMessageId || !isSnowflake(id)) return;
 
         let stale = false;
         RestAPI.get({ url: Constants.Endpoints.MESSAGES(id), query: { limit: 1 } })
@@ -224,7 +226,7 @@ function ChannelRow({ id, folderId, visible }: { id: string; folderId: string; v
             </div>
             {channel.isMultiUserDM()
                 ? channel.icon
-                    ? <Avatar src={`https://cdn.discordapp.com/channel-icons/${id}/${channel.icon}.png`} size="SIZE_32" aria-label={name} />
+                    ? <Avatar src={IconUtils.getChannelIconURL({ id, icon: channel.icon, size: 64 })} size="SIZE_32" aria-label={name} />
                     : <GroupDmsRecipientsIcon recipients={channel.recipients} channel={channel} size="SIZE_32" isTyping={null} />
                 : <Avatar src={UserStore.getUser(channel.recipients[0])?.getAvatarURL(undefined, 128, true)} size="SIZE_32" aria-label={name} />}
             <div className={cl("row-text")}>
