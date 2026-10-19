@@ -26,7 +26,12 @@ Equicord has no external plugin store, so you need Equicord built from source.
    pnpm install
    ```
 
-3. Copy the `dmFolders` folder from this repository to `src/userplugins/dmFolders`.
+3. Clone this repository into the user plugins folder:
+
+   ```bash
+   git clone https://github.com/mathbtw/DMFolders.git src/userplugins/dmFolders
+   ```
+
 4. Build and inject into Discord (close Discord first):
 
    ```bash
@@ -40,14 +45,14 @@ A source install keeps its settings in the cloned folder, so plugins you enabled
 
 ## Updating
 
-Use the Updater tab in the Equicord settings, or run `git pull`, `pnpm install` and `pnpm build` yourself. The `src/userplugins` folder is ignored by git, so pulling never overwrites the plugin.
+Use the Updater tab in the Equicord settings, or run `git pull`, `pnpm install` and `pnpm build` yourself. The `src/userplugins` folder is ignored by git, so pulling never overwrites the plugin. To update the plugin itself, run `git pull` inside `src/userplugins/dmFolders`, then `pnpm build`.
 
 ## ChannelTabs support (optional)
 
 If you use the ChannelTabs plugin, the Folders page needs a small change so it shows up as a tab. From the Equicord folder:
 
 ```bash
-git apply path/to/channeltabs-support.patch
+git apply src/userplugins/dmFolders/channeltabs-support.patch
 pnpm build
 ```
 
