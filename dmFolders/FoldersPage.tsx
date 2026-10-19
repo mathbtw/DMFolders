@@ -310,15 +310,47 @@ function FolderSection({ folder }: { folder: Folder; }) {
     );
 }
 
-const PAGE_SETTINGS: Array<"folders" | "sortOrder"> = ["folders", "sortOrder"];
+const PAGE_SETTINGS: Array<"folders"> = ["folders"];
+const CONTROLS_SETTINGS: Array<"sortOrder"> = ["sortOrder"];
+const PAGE_PADDING = 32;
 
-export function FoldersPage() {
-    settings.use(PAGE_SETTINGS);
+let pageElement: HTMLElement | null = null;
+
+export function FolderControls() {
+    settings.use(CONTROLS_SETTINGS);
+    const ref = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState<{ top: number; right: number; } | null>(null);
+
+    useEffect(() => {
+        const bar = ref.current?.parentElement;
+        if (!bar) return;
+
+        const update = () => {
+            if (!pageElement) return;
+
+            const barRect = bar.getBoundingClientRect();
+            const contentRight = pageElement.getBoundingClientRect().left + pageElement.clientWidth;
+            setPosition({
+                top: barRect.top + barRect.height / 2,
+                right: window.innerWidth - contentRight + PAGE_PADDING
+            });
+        };
+
+        const observer = new ResizeObserver(update);
+        observer.observe(bar);
+        if (pageElement) observer.observe(pageElement);
+        update();
+
+        return () => observer.disconnect();
+    }, []);
 
     return (
-        <div className={cl("page")}>
-            <div className={cl("header")}>
-                <Text variant="heading-xl/bold" className={cl("title")}>Folders</Text>
+        <div
+            ref={ref}
+            className={cl("controls")}
+            style={position ? { top: position.top, right: position.right } : { visibility: "hidden" }}
+        >
+            <div className={cl("sort")}>
                 <Select
                     options={SORT_OPTIONS.map(({ label, value }) => ({ label, value }))}
                     select={v => {
@@ -327,10 +359,24 @@ export function FoldersPage() {
                     isSelected={v => v === settings.store.sortOrder}
                     serialize={String}
                 />
-                <Button color={Button.Colors.BRAND} onClick={() => openFolderModal()}>
-                    New folder
-                </Button>
             </div>
+            <Button size={Button.Sizes.SMALL} color={Button.Colors.BRAND} onClick={() => openFolderModal()}>
+                New folder
+            </Button>
+        </div>
+    );
+}
+
+export function FoldersPage() {
+    settings.use(PAGE_SETTINGS);
+
+    return (
+        <div
+            className={cl("page")}
+            ref={element => {
+                pageElement = element;
+            }}
+        >
             {getFolders().map(folder => <FolderSection key={folder.id} folder={folder} />)}
         </div>
     );

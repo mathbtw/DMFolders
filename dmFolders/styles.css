@@ -3,21 +3,16 @@
     min-width: 0;
     padding: 24px 32px;
     overflow-y: auto;
+    scrollbar-gutter: stable;
     color: var(--text-default);
 }
 
-.vc-dmfolders-header,
 .vc-dmfolders-folder-header {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.vc-dmfolders-header {
-    margin-bottom: 24px;
-}
-
-.vc-dmfolders-title,
 .vc-dmfolders-folder-name {
     flex: 1;
 }
@@ -168,4 +163,22 @@
 .vc-dmfolders-unread {
     background: var(--background-mod-strong);
     color: var(--text-default);
+}
+
+.vc-dmfolders-sort {
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.vc-dmfolders-controls {
+    position: fixed;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateY(-50%);
+}
+
+.vc-dmfolders-title-icon {
+    color: var(--interactive-icon-default);
 }
