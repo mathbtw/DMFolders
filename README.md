@@ -2,12 +2,16 @@
 
 An [Equicord](https://github.com/Equicord/Equicord) plugin that sorts your DMs and group chats into folders.
 
-- A **Folders** button under Quests in the sidebar opens a dedicated page.
+<img src="screenshots/page.png" alt="The Folders page" width="800">
+
+- A **Folders** button under Quests in the sidebar opens a dedicated page. It uses Discord's own Friends layout, so Active Now stays on the right.
 - Each folder has a name, a color and an icon. The icon can be any emoji, including your custom and Nitro ones.
 - Folders collapse and expand with an animation, and show a badge for unread mentions when collapsed.
 - Every conversation shows its last message and date. Conversations can be sorted by most recent, oldest, name or order added.
 - Right click any DM or group, then pick **Folders**, to add it to a folder or create a new one.
 - Conversations in a folder are hidden from the main DM list. You can turn that off in the plugin settings.
+
+<img src="screenshots/edit.png" alt="The Edit folder window" width="800">
 
 ## Install
 
