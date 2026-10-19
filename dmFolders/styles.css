@@ -107,6 +107,7 @@
     padding: 8px 12px;
     border-radius: 8px;
     cursor: pointer;
+    position: relative;
 }
 
 .vc-dmfolders-row:hover {
@@ -140,6 +141,10 @@
 }
 
 .vc-dmfolders-row-remove {
+    position: absolute;
+    inset-inline-end: 0;
+    top: 50%;
+    transform: translateY(-50%);
     opacity: 0;
 }
 
